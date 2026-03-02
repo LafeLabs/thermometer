@@ -1,5 +1,7 @@
 [
     "edit-readme.html",
     "edit-php-files.html",
-    "edit-web-files.html"
+    "edit-web-files.html",
+    "measurement.html",
+    "thermometer.html"
 ]

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <!--
+thermometer
+   -->
+<link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREQAAAAAAAREREAAAAAABEREQAAAAAAAREQAAAAAAAAEQAAAAAAAAARAAAAAAAAABAAAAAAAAAAEQAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8PwAA+B8AAPAPAADwDwAA+B8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/T8AAP2/AAD9vwAA/T8AAP2/AAD+fwAA" rel="icon" type="image/x-icon">
+   <title>thermometer</title>    
+</head>
+<body>    
+    <H1>measurement</H1>
+    <table>
+        <tr>
+            <td>temperature:</td>
+            <td>
+                <input id ="tempeartureinput">
+            </td>
+        </tr>
+        <tr>
+            <td>sensor:</td>
+            <td>
+                <input id = "sensorinput">
+            </td>
+        </tr>
+        <tr>
+            <td>unit:</td>
+            <td>
+                <input id = "unitinput">
+            </td>
+        </tr>
+    </table>
+    <textarea id = "measurement"></textarea>
+    <p>
+        <a href= "measurement.json">measurement.json</a>
+    </p>
+<script>
+
+
+measurement_array = [];
+
+measurement = {};
+measurement.sensor = "diodeA";
+measurement.unit = "K";
+measurement.timestamp = Date.now();
+measurement.temperature = 0.0;
+
+document.getElementById("unitinput").value = measurement.unit;
+document.getElementById("sensorinput").value = measurement.sensor;
+document.getElementById("tempeartureinput").value = "";
+document.getElementById("tempeartureinput").select();
+document.getElementById("measurement").value = "";
+
+document.getElementById("tempeartureinput").onchange = function(){
+    if(isNaN(parseFloat(this.value))){
+        alert("not a number!");
+    }
+    else{
+        measurement.temperature = parseFloat(this.value);
+        measurement.timestamp = Date.now();
+        document.getElementById("measurement").value = JSON.stringify(measurement) + document.getElementById("measurement").value;
+        data = encodeURIComponent(JSON.stringify(measurement));
+        var httpc = new XMLHttpRequest();
+        var url = "save-file.php";        
+        httpc.open("POST", url, true);
+        httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+        httpc.send("data="+data+"&filename=measurement.json");//send text to save-file.php
+        measurement_array.push(measurement);
+        data = encodeURIComponent(JSON.stringify(measurement_array));
+        var httpc = new XMLHttpRequest();
+        var url = "save-file.php";        
+        httpc.open("POST", url, true);
+        httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+        httpc.send("data="+data+"&filename=measurement_array.json");//send text to save-file.php
+        
+
+    }
+    document.getElementById("tempeartureinput").value = "";
+    
+}
+
+</script>
+<style>
+#measurement{
+    width:80%;
+}
+</style>
+</body>
+</html>
+
+
+    
+    

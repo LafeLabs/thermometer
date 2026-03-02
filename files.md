@@ -15,11 +15,13 @@
  - [edit-web-files.html](edit-web-files.html)
  - [index.html](index.html)
  - [list-files.html](list-files.html)
+ - [measurement.html](measurement.html)
  - [organic-web-home.html](organic-web-home.html)
  - [qrcode.html](qrcode.html)
  - [read-markdown-files.html](read-markdown-files.html)
  - [read-markdown-latex-files.html](read-markdown-latex-files.html)
  - [read-text-files.html](read-text-files.html)
+ - [thermometer.html](thermometer.html)
 
 # CSS FILES
 
@@ -34,6 +36,8 @@
 
  - [dna.json](dna.json)
  - [links.json](links.json)
+ - [measurement.json](measurement.json)
+ - [measurement_array.json](measurement_array.json)
  - [temperature.json](temperature.json)
  - [temperature_log.json](temperature_log.json)
  - [thermometer.json](thermometer.json)

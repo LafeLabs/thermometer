@@ -14,15 +14,19 @@
         "edit-web-files.html",
         "index.html",
         "list-files.html",
+        "measurement.html",
         "organic-web-home.html",
         "qrcode.html",
         "read-markdown-files.html",
         "read-markdown-latex-files.html",
-        "read-text-files.html"
+        "read-text-files.html",
+        "thermometer.html"
     ],
     "json": [
         "dna.json",
         "links.json",
+        "measurement.json",
+        "measurement_array.json",
         "temperature.json",
         "temperature_log.json",
         "thermometer.json"
