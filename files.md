@@ -21,6 +21,7 @@
  - [read-markdown-files.html](read-markdown-files.html)
  - [read-markdown-latex-files.html](read-markdown-latex-files.html)
  - [read-text-files.html](read-text-files.html)
+ - [thermometer-backup.html](thermometer-backup.html)
  - [thermometer.html](thermometer.html)
 
 # CSS FILES

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+   <meta charset="utf-8">
+   <!--
+thermometer
+   -->
+<link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREQAAAAAAAREREAAAAAABEREQAAAAAAAREQAAAAAAAAEQAAAAAAAAARAAAAAAAAABAAAAAAAAAAEQAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8PwAA+B8AAPAPAADwDwAA+B8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/T8AAP2/AAD9vwAA/T8AAP2/AAD+fwAA" rel="icon" type="image/x-icon">
+   <title>thermometer</title>    
+   
+<script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>    
+<div id = "scroll">
+    <H1>thermometer</H1>
+    <table>
+        <tr>
+            <td>temperature:</td>
+            <td>
+                <input id ="tempeartureinput">
+            </td>
+        </tr>
+        <tr>
+            <td>sensor type:</td>
+            <td>
+                <input id = "typeinput">
+            </td>
+        </tr>
+        <tr>
+            <td>sensor name:</td>
+            <td>
+                <input id = "nameinput">
+            </td>
+        </tr>
+        <tr>
+            <td>unit:</td>
+            <td>
+                <input id = "unitinput">
+            </td>
+        </tr>
+        <tr>
+            <td>note:</td>
+            <td>
+                <input id = "noteinput">
+            </td>
+        </tr>
+        <tr>
+            <td>max:</td>
+            <td>
+                <input id = "maxinput">
+            </td>
+        </tr>
+        <tr>
+            <td>min:</td>
+            <td>
+                <input id = "maxinput">
+            </td>
+        </tr>
+
+    </table>
+    <p>
+        <a href= "measurement.json">measurement.json</a>
+    </p>    
+    <p>
+        <a href= "measurement_array.json">measurement_array.json</a>
+    </p>    
+</div>
+
+<script>
+
+squaresize = 100;
+
+if(innerWidth > innerHeight){
+    squaresize = innerHeight;
+    document.getElementById("scroll").style.top="0px";
+    
+}
+
+function setup(){
+    createCanvas(squaresize-50, squaresize-50);    
+}
+
+temperature_array = [];
+
+
+thermometer = {};
+thermometer.type = "diode";
+thermometer.name = "A";
+thermometer.location = "cryostat";
+thermometer.note = "model data";
+
+document.getElementById("typeinput").value = thermometer.type;
+
+temperature = {};
+temperature.unit = "K";
+temperature.timestamp = Date.now();
+temperature.temperature = 0.0;
+
+document.getElementById("unitinput").value = temperature.unit;
+document.getElementById("tempeartureinput").value = "";
+document.getElementById("tempeartureinput").select();
+
+document.getElementById("tempeartureinput").onchange = function(){
+    if(isNaN(parseFloat(this.value))){
+        alert("not a number!");
+    }
+    else{
+        measurement.temperature = parseFloat(this.value);
+        measurement.timestamp = Date.now();
+        data = encodeURIComponent(JSON.stringify(measurement));
+        var httpc = new XMLHttpRequest();
+        var url = "save-file.php";        
+        httpc.open("POST", url, true);
+        httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+        httpc.send("data="+data+"&filename=temperature.json");//send text to save-file.php
+        measurement_array.push(measurement);
+        data = encodeURIComponent(JSON.stringify(measurement_array));
+        var httpc = new XMLHttpRequest();
+        var url = "save-file.php";        
+        httpc.open("POST", url, true);
+        httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
+        httpc.send("data="+data+"&filename=measurement_array.json");//send text to save-file.php
+        
+
+    }
+    document.getElementById("tempeartureinput").value = "";
+    
+}
+ 
+ 
+</script>
+<style>
+main{
+    position:absolute;
+    right:23px;
+    top:23px;
+    border:solid;
+}
+#scroll{
+    position:absolute;
+    left:0px;
+    bottom:0px;
+    overflow:scroll;
+}
+#scroll img{
+    max-width:80%;
+    display:block;
+    margin:auto;
+}
+#measurement{
+}
+</style>
+</body>
+</html>
+
+
+    
+    

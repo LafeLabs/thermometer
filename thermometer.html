@@ -7,7 +7,6 @@ thermometer
    -->
 <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAD/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAREQAAAAAAAREREAAAAAABEREQAAAAAAAREQAAAAAAAAEQAAAAAAAAARAAAAAAAAABAAAAAAAAAAEQAAAAAAAAARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8PwAA+B8AAPAPAADwDwAA+B8AAPw/AAD8PwAA/D8AAPw/AAD8PwAA/T8AAP2/AAD9vwAA/T8AAP2/AAD+fwAA" rel="icon" type="image/x-icon">
    <title>thermometer</title>    
-   
 <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
@@ -18,53 +17,70 @@ thermometer
         <tr>
             <td>temperature:</td>
             <td>
-                <input id ="tempeartureinput">
+                <input id = "temperature_input">
             </td>
         </tr>
         <tr>
-            <td>sensor type:</td>
+            <td>min_temperature:</td>
             <td>
-                <input id = "typeinput">
+                <input id = "min_temperature_input">
             </td>
         </tr>
         <tr>
-            <td>sensor name:</td>
+            <td>max_temperature:</td>
             <td>
-                <input id = "nameinput">
+                <input id = "max_temperature_input">
             </td>
         </tr>
         <tr>
             <td>unit:</td>
             <td>
-                <input id = "unitinput">
+                <input id = "unit_input">
+            </td>
+        </tr>
+        <tr>
+            <td>sensor_name:</td>
+            <td>
+                <input id = "sensor_name_input">
+            </td>
+        </tr>
+        <tr>
+            <td>sensor_type:</td>
+            <td>
+                <input id = "sensor_type_input">
             </td>
         </tr>
         <tr>
             <td>note:</td>
             <td>
-                <input id = "noteinput">
+                <input id = "note_input">
             </td>
         </tr>
         <tr>
-            <td>max:</td>
+            <td>url:</td>
             <td>
-                <input id = "maxinput">
+                <input id = "url_input">
             </td>
         </tr>
+        </table>
+    <table>
         <tr>
-            <td>min:</td>
-            <td>
-                <input id = "maxinput">
-            </td>
+            <td>1 HOUR</td>
+            <td>3 HOURS</td>
+            <td>12 HOURS</td>
+            <td>1 DAY</td>
+            <td>1 WEEK</td>
+            <td>1 MONTH</td>
         </tr>
-
     </table>
-    <p>
-        <a href= "measurement.json">measurement.json</a>
-    </p>    
-    <p>
-        <a href= "measurement_array.json">measurement_array.json</a>
-    </p>    
+    <table>
+        <tr>
+            <td>ADD WEB THERMOMETER LINK:</td>
+            <td>
+                <input id = "new_thermometer_input">
+            </td>
+        </tr>
+    </table>
 </div>
 
 <script>
@@ -81,50 +97,45 @@ function setup(){
     createCanvas(squaresize-50, squaresize-50);    
 }
 
-temperature_array = [];
-
-
 thermometer = {};
-thermometer.type = "diode";
-thermometer.name = "A";
-thermometer.location = "cryostat";
-thermometer.note = "model data";
 
-document.getElementById("typeinput").value = thermometer.type;
+thermometer.temperature = 293;//K
+thermometer.min_temperature = 3;//K
+thermometer.max_temperature = 400;//K
+thermometer.unit = "K";
+thermometer.sensor_name = "dirt wizard guess";
+thermometer.sensor_type = "guess";
+thermometer.note = "o hi!";
+thermometer.temperature_array = [];
+thermometer.time_array = [];
+thermometer.note_array = [];
+thermometer.url = "https://trashrobot.net/thermometer/";
+thermometer.thermometer_web = [];//array of links 
 
-temperature = {};
-temperature.unit = "K";
-temperature.timestamp = Date.now();
-temperature.temperature = 0.0;
 
-document.getElementById("unitinput").value = temperature.unit;
-document.getElementById("tempeartureinput").value = "";
-document.getElementById("tempeartureinput").select();
+document.getElementById("min_temperature_input").value = thermometer.min_temperature;
+document.getElementById("max_temperature_input").value = thermometer.max_temperature;
 
-document.getElementById("tempeartureinput").onchange = function(){
+document.getElementById("unit_input").value = thermometer.unit;
+
+document.getElementById("sensor_name_input").value = thermometer.sensor_name;
+document.getElementById("sensor_type_input").value = thermometer.sensor_type;
+document.getElementById("note_input").value = thermometer.note;
+document.getElementById("url_input").value = thermometer.url;
+
+document.getElementById("temperature_input").select();
+document.getElementById("temperature_input").value = "";
+
+document.getElementById("temperature_input").onchange = function(){
     if(isNaN(parseFloat(this.value))){
         alert("not a number!");
     }
     else{
-        measurement.temperature = parseFloat(this.value);
-        measurement.timestamp = Date.now();
-        data = encodeURIComponent(JSON.stringify(measurement));
-        var httpc = new XMLHttpRequest();
-        var url = "save-file.php";        
-        httpc.open("POST", url, true);
-        httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-        httpc.send("data="+data+"&filename=temperature.json");//send text to save-file.php
-        measurement_array.push(measurement);
-        data = encodeURIComponent(JSON.stringify(measurement_array));
-        var httpc = new XMLHttpRequest();
-        var url = "save-file.php";        
-        httpc.open("POST", url, true);
-        httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-        httpc.send("data="+data+"&filename=measurement_array.json");//send text to save-file.php
-        
+
+
 
     }
-    document.getElementById("tempeartureinput").value = "";
+    document.getElementById("temperature_input").value = "";
     
 }
 
