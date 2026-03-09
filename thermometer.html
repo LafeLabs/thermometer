@@ -13,6 +13,7 @@ thermometer
 <body>    
 <div id = "scroll">
     <H1>thermometer</H1>
+    <A href="thermometer.json">thermometer.json</A>
     <table>
         <tr>
             <td>temperature:</td>
@@ -68,12 +69,14 @@ thermometer
             <td>1 HOUR</td>
             <td>3 HOURS</td>
             <td>12 HOURS</td>
+        </TR>
+        <TR>
             <td>1 DAY</td>
             <td>1 WEEK</td>
             <td>1 MONTH</td>
         </tr>
     </table>
-    <table>
+    <table id = "linktable">
         <tr>
             <td>ADD WEB THERMOMETER LINK:</td>
             <td>
@@ -81,6 +84,7 @@ thermometer
             </td>
         </tr>
     </table>
+    <div id = "linkfeed"></div>
 </div>
 
 <script>
@@ -90,7 +94,7 @@ squaresize = 100;
 if(innerWidth > innerHeight){
     squaresize = innerHeight;
     document.getElementById("scroll").style.top="0px";
-    
+    document.getElementById("scroll").style.right= squaresize.toString() + "px";
 }
 
 function setup(){
@@ -111,7 +115,8 @@ thermometer.time_array = [];
 thermometer.note_array = [];
 thermometer.url = "https://trashrobot.net/thermometer/";
 thermometer.thermometer_web = [];//array of links 
-
+thermometer.thermometer_web.push(thermometer.url);
+savethermometer();
 
 document.getElementById("min_temperature_input").value = thermometer.min_temperature;
 document.getElementById("max_temperature_input").value = thermometer.max_temperature;
@@ -139,6 +144,61 @@ document.getElementById("temperature_input").onchange = function(){
     
 }
 
+
+function drawlinkfeed(){
+    document.getElementById("linkfeed").innerHTML = "";
+    for(var index = thermometer.thermometer_web.length - 1;index >= 0;index--){
+        var newlinkbox = document.createElement("DIV");
+        newlinkbox.classList.add("linkbox");
+        document.getElementById("linkfeed").appendChild(newlinkbox);
+
+        var newlink = document.createElement("A");
+        newlink.innerHTML = thermometer.thermometer_web[index];
+        newlink.href = thermometer.thermometer_web[index];
+
+        var new_delete_button = document.createElement("SPAN");
+        new_delete_button.classList.add("button");
+        new_delete_button.classList.add("link-delete-button");
+        new_delete_button.innerHTML = "DELETE";
+        new_delete_button.onclick = function(){
+            var newindex = parseInt(this.parentElement.getElementsByClassName("data")[0].innerHTML);
+            var newlinks = [];
+            for(var lindex = 0;lindex < thermometer.thermometer_web.length;lindex++){
+                if(lindex != newindex){
+                    newlinks.push(thermometer.thermometer_web[lindex]);
+                }
+            }
+            thermometer.thermometer_web = newlinks;
+            drawlinkfeed();
+            savethermometer()
+        }
+        newlinkbox.appendChild(new_delete_button);
+        newlinkbox.appendChild(newlink);
+        var indexdata = document.createElement("SPAN");
+        indexdata.classList.add("data");
+        indexdata.innerHTML = index.toString();
+        newlinkbox.appendChild(indexdata);
+    }
+
+}
+
+function savethermometer(){
+    var httpc = new XMLHttpRequest();
+    httpc.open("POST", "save-file.php", true);
+    httpc.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    httpc.send("data="+encodeURIComponent(JSON.stringify(thermometer,null,"    "))+"&filename=thermometer.json");//send text to save-file.php
+}
+
+var httpclinks = new XMLHttpRequest();
+httpclinks.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        thermometer = JSON.parse(this.responseText);    
+        drawlinkfeed();
+    }
+};
+httpclinks.open("GET", "load-file.php?filename=thermometer.json", true);
+httpclinks.send();
+
 </script>
 <style>
 main{
@@ -159,6 +219,39 @@ main{
     margin:auto;
 }
 #measurement{
+}
+.data{
+    display:none;
+}
+.link-delete-button{
+    border:solid;
+    border-radius:5px;
+    border-color:red;
+    cursor:pointer;
+    color:red;
+    text-align:center;
+    width:40%;
+    font-size:2em;
+    position:relative;
+    top:1.5em;
+    left:1.5em;
+}
+.linkbox{
+    border:solid;
+}
+.linkbox a{
+    text-align:center;
+    font-size:3em;
+    width:80%;
+    margin:auto;
+    display:block;
+    border:solid;
+    border-radius:0.5em;
+    border-width:0.5em;
+    color:blue;
+    margin-top:1em;
+    margin-bottom:0.5em;
+    overflow-x:scroll;
 }
 </style>
 </body>
